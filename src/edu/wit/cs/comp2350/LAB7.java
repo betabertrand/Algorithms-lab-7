@@ -37,36 +37,54 @@ public class LAB7 {
 	public static Item[] FindDynamic(Item[] table, int weight) {
 		
 		// TODO: implement this method
+		int[][] values = new int[table.length + 1][weight + 1];
+		int[][] keeps = new int[table.length + 1][weight + 1];
+		best_value = 0; //best value is initialized to zero every time this method is run in order to make sure the global best value starts from 0 every time this method is run.
 
-		int[][] values = new int[weight][table.length];
-
-		Item[][] keep;
-
-		for (int i = 0; i < values.length; i ++) {
+		for (int i = 0; i < values[0].length; i ++) {
 			values[0][i] = 0;
 		}
 
-		for (int i = 1; i < table.length; i++) {
-			for (int j = 0; j < weight; j++ ) {
-				if (table[i -1].weight < j) {
-					if (max(table[i].value,values[i-1][j]) > best_value) {
-						int temp;
-						weight -= table[i].weight;
-						values[i][j] = table[i].value + values[i-1][j-weight];
-
+		for (int i = 1; i <= table.length; i++) {
+			for (int j = 1; j <= weight; j++ ) {
+				if (table[i -1].weight <= j) {
+					if (max(table[i-1].value + values[i-1][j-table[i-1].weight], values[i-1][j])) {
+						values[i][j] = table[i - 1].value + values[i-1][j-table[i-1].weight];
+						keeps[i-1][j] = 1;
 					} else {
-						values[i - 1][j] = values[i-1][j];
+						values[i][j] = values[i-1][j];
 					}
+				} else {
+					values[i][j] = values[i-1][j];
 				}
 			}
 		}
 
+		Item[] newkeep = new Item[table.length]; //adds all keep values with 1 to the newkeep knapsack of type item.
+		int num = 0;
+		for (int i = table.length-1; i>= 0; i--) {
+			if (keeps[i][weight] == 1) {
+				newkeep[num] = table[i];
+				num++;
+				best_value += table[i].value;
+				weight -= table[i].weight;
+			}
+		}
+		Item[] finalsack = new Item[num]; // adding values to this knapsack because the newkeep sack has extra empty spaces. also why num counter is needed.
+		for (int i= 0; i < num; i ++) {
+			finalsack[i] = newkeep[i];
+		}
+		/* for (int i = 0; i < values.length; i ++) {
+			for (int j = 0; j < values[0].length; j++) {
+				System.out.print(values[i][j] + " ");
+			} System.out.println();
+		} */
 
-		return null;
+		return finalsack;
 	}
 
-	public static int max(int x, int y) {
-		return ((x > y) ? x : y);
+	public static boolean max(int x, int y) {
+		return ((x > y) ? true : false);
 	}
 
 
