@@ -37,8 +37,39 @@ public class LAB7 {
 	public static Item[] FindDynamic(Item[] table, int weight) {
 		
 		// TODO: implement this method
+
+		int[][] values = new int[weight][table.length];
+
+		Item[][] keep;
+
+		for (int i = 0; i < values.length; i ++) {
+			values[0][i] = 0;
+		}
+
+		for (int i = 1; i < table.length; i++) {
+			for (int j = 0; j < weight; j++ ) {
+				if (table[i -1].weight < j) {
+					if (max(table[i].value,values[i-1][j]) > best_value) {
+						int temp;
+						weight -= table[i].weight;
+						values[i][j] = table[i].value + values[i-1][j-weight];
+
+					} else {
+						values[i - 1][j] = values[i-1][j];
+					}
+				}
+			}
+		}
+
+
 		return null;
 	}
+
+	public static int max(int x, int y) {
+		return ((x > y) ? x : y);
+	}
+
+
 
 	
 	// enumerates all subsets of items to find maximum value that fits in knapsack
@@ -214,3 +245,24 @@ public class LAB7 {
 	}
 
 }
+
+
+		/*
+
+		//for (int i = 0; i < table.length; i++) {
+		//	for (int j = 0; j < weight; j++) {
+		//		if (table[i -1].weight < weight && max(table[i].value, table[i-1].value) > ) ) {
+//
+//				}
+//			}
+//		}
+		int i = 1;
+		if (weight == 0) {
+			return t;
+		} else {
+			if (table[i - 1].weight < weight) {
+
+			}
+		}
+
+		*/
